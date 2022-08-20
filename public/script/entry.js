@@ -2,7 +2,7 @@
  * @file entry.js
  * @description web push client
  */
-const VAPIDPublicKey = '<Your Public Key>'
+const VAPIDPublicKey = 'BMlKeSNPH6w-BvhDixR6rotjOo6BbNDc7tDp2vKtU8fLHHuNWIoT1__Qji0X8ol1nsg-llpY3qWGyoKtE1noHF8'
 // 注册 service worker 并缓存 registration
 let registration
 function registerServiceWorker () {
@@ -38,6 +38,7 @@ function subscribeAndDistribute (registration) {
   // 检查是否已经订阅过
   return registration.pushManager.getSubscription().then(function (subscription) {
     // 如果已经订阅过，就不重新订阅了
+    console.log(subscription)
     if (subscription) {
       return
     }
@@ -47,12 +48,14 @@ function subscribeAndDistribute (registration) {
       applicationServerKey: base64ToUint8Array(VAPIDPublicKey)
     }).then(function (subscription) {
       // 订阅推送成功之后，将订阅信息传给后端服务器
+      console.log('订阅推送成功之后，将订阅信息传给后端服务器')
       distributePushResource(subscription)
     })
   })
 }
 
 function distributePushResource (subscription) {
+  console.log('subscription: ', subscription)
   return fetch('/api/push/subscribe', {
     method: 'POST',
     headers: {
@@ -77,7 +80,7 @@ function base64ToUint8Array (base64String) {
   let base64 = (base64String + padding)
     .replace(/-/g, '+')
     .replace(/_/g, '/')
-  let rawData = atob(base64)
+  let rawData = window.atob(base64)
   let outputArray = new Uint8Array(rawData.length)
   for (let i = 0; i < rawData.length; i++) {
     outputArray[i] = rawData.charCodeAt(i)

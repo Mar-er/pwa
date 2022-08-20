@@ -15,7 +15,7 @@ const GCMAPIkey = config.GCMAPIkey
 
 // 配置 web push
 webpush.setVapidDetails(
-  'mailto:your-email@provider.com',
+  'https://uiiztz-khkcuj-8088.preview.myide.io',
   VAPIDkeys.publicKey,
   VAPIDkeys.privateKey
 )
@@ -26,6 +26,7 @@ let pushSubscriptionSet = new Set()
 
 // 定时任务，每隔 10 分钟向推送服务器发送消息
 setInterval(function () {
+  console.log('pushSubscriptionSet: ', pushSubscriptionSet)
   if (pushSubscriptionSet.size > 0) {
     pushSubscriptionSet.forEach(function (pushSubscription) {
       webpush.sendNotification(pushSubscription, JSON.stringify({
@@ -36,7 +37,7 @@ setInterval(function () {
       }))
     })
   }
-}, 100 * 60)
+}, 1000 * 60)
 
 // 设定静态文件目录，比如本地文件
 // 目录为 pwa-book-demo/public/images，访问
